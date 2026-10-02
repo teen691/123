@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -50,10 +49,7 @@ regression_df = yearly[
     (yearly["관측일수"] >= 300)
 ].copy()
 
-# ---------------------------------------
 # 전체 기간 회귀
-# 독립변수 = 1908년부터 지난 연수
-# ---------------------------------------
 regression_df["지난연수"] = regression_df["연도"] - 1908
 
 x = regression_df["지난연수"].to_numpy()
@@ -61,11 +57,26 @@ y = regression_df["연평균기온"].to_numpy()
 
 slope, intercept = np.polyfit(x, y, 1)
 
-# 상관계수
-correlation = np.corrcoef(x, y)[0, 1]
-
-# 100년 동안의 기온 변화량
+# 100년당 기온 변화
 slope_100 = slope * 100
+
+
+# 최근 20년: 2006~2025년
+recent_20_df = regression_df[
+    regression_df["연도"] >= 2006
+].copy()
+
+recent_x = recent_20_df["연도"].to_numpy() - 1908
+recent_y = recent_20_df["연평균기온"].to_numpy()
+
+recent_slope, recent_intercept = np.polyfit(
+    recent_x,
+    recent_y,
+    1
+)
+
+# 최근 20년의 100년당 기온 변화
+recent_slope_100 = recent_slope * 100
 
 # ---------------------------------------
 # 최근 20년 회귀
